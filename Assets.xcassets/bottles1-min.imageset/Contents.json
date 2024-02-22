@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "bottles1-min.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "images" : [
+    {
+      "filename" : "bottle40x74.png",
+      "idiom" : "universal"
+    }
+  ],
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  }
+}
