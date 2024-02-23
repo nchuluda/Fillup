@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct AddVehicleView: View {
+struct AddVehicleFormView: View {
     @ObservedObject var fillup: Fillup
     @State var name: String = ""
     @State var mileage: Double = 0.0
@@ -32,7 +32,7 @@ struct AddVehicleView: View {
                 Spacer()
                 Text("\(Int(mileage))")
             }
-            Slider(value: $mileage, in: 0...400000, step: 10)
+            Slider(value: $mileage, in: 0...400000, step: 1000)
 
             
             HStack {
