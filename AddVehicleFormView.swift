@@ -13,8 +13,14 @@ struct AddVehicleFormView: View {
     @State var mileage: Double = 0.0
     @State var mpg: Double = 0.0
     @State var averagePricePerGallon: Double = 0.0
+    @State var showAlert = false
+    
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
+        Text("Add Your Vehicle")
+            .font(.title)
+            .padding()
         Form {
             Section {
                 TextField("Vehicle Model/Name", text: $name)
@@ -40,7 +46,7 @@ struct AddVehicleFormView: View {
                 Spacer()
                 Text("\(Int(mpg))")
             }
-            Slider(value: $mpg, in: 0...100, step: 1)
+            Slider(value: $mpg, in: 1...100, step: 1)
             
             HStack {
                 Text("Average Price Per Gallon: ")
@@ -52,14 +58,28 @@ struct AddVehicleFormView: View {
             
             Section {
                 Button("Add Vehicle") {
-                    fillup.vehicles.append(Vehicle(name: name, mileage: mileage, mpg: mpg, averagePricePerGallon: averagePricePerGallon))
-                    name = ""
-                    mpg = 0.0
-                    mileage = 0.0
-                    averagePricePerGallon = 0.0
+                    if name.count > 0 && mileage > 0 && mpg > 0 && averagePricePerGallon > 0 {
+                        fillup.vehicles.append(Vehicle(name: name, mileage: mileage, mpg: mpg, averagePricePerGallon: averagePricePerGallon))
+                        name = ""
+                        mpg = 0.0
+                        mileage = 0.0
+                        averagePricePerGallon = 0.0
+                        dismiss()
+                    } else {
+                        showAlert = true
+                    }
+                }
+                .alert("Please enter a name and ensure that values are not zero.", isPresented: $showAlert) {
+                    Button("OK", role: .cancel) { }
                 }
             }
+            Section {
+                Button("Cancel") {
+                    dismiss()
+                }
+                .tint(.red)
+            } 
         }
-        .frame(width: 400)
+//        .frame(width: 400)
     }
 }

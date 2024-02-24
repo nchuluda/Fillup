@@ -5,7 +5,14 @@ struct ContentView: View {
     @State var number: Int = 0
     @State var slider: Double = 0
     @State var tankExpanded = true
+    
+    @State var showAddVehicle = false
     var theMaxWidth = 1.0
+    
+    @State var selectedVehicle: Vehicle?
+    @Binding var animatedCost: Double
+    @Binding var animatedBottles: Int
+    @Binding var animatedGallons: Int
     
 //    var scaledImage: String {
 //        switch number {
@@ -40,14 +47,18 @@ struct ContentView: View {
             return "bottles32x58"
         case 221...420:
             return "bottles22x39"
-        case 421...1000:
+        case 421...800:
             return "bottles17x30"
-        case 1001...2000:
+        case 801...1600:
             return "bottles12x21"
-        case 2001...7500:
+        case 1601...2400:
+            return "bottles10x18"
+        case 2401...7500:
             return "bottles7x12"
-        case 7501...25000:
-            return "bottles3x6"
+        case 7501...12500:
+            return "bottles5x7"
+        case 12501...25000:
+            return "bottles3x5"
         default:
             return "bottles2x4"
         }
@@ -61,13 +72,17 @@ struct ContentView: View {
             return 32.0
         case 221...420:
             return 22.0
-        case 421...1000:
+        case 421...800:
             return 17.0
-        case 1001...2000:
+        case 801...1600:
             return 12.0
-        case 2001...7500:
+        case 1601...2400:
+            return 10.0
+        case 2401...7500:
             return 7.0
-        case 7501...25000:
+        case 7501...12500:
+            return 5.0
+        case 12501...25000:
             return 3.0
         default:
             return 2.0
@@ -82,14 +97,18 @@ struct ContentView: View {
             return 58.0
         case 221...420:
             return 39.0
-        case 421...1000:
+        case 421...800:
             return 30.0
-        case 1001...2000:
+        case 801...1600:
             return 21.0
-        case 2001...7500:
+        case 1601...2400:
+            return 18.0
+        case 2401...7500:
             return 12.0
-        case 7501...25000:
-            return 6.0
+        case 7501...12500:
+            return 7.0
+        case 12501...25000:
+            return 5.0
         default:
             return 4.0
         }
@@ -173,11 +192,11 @@ struct ContentView: View {
     }
     
     var timeInterval: Double {
-        if slider < 1000 {
+        if number < 1000 {
             return 0.01
-        } else if slider < 2000 {
+        } else if number < 2000 {
             return 0.005
-        } else if slider < 5000 {
+        } else if number < 5000 {
             return 0.002
         } else {
             return 0.001
@@ -187,47 +206,45 @@ struct ContentView: View {
     var body: some View {
         
         HStack(alignment: .top) {
-            
-            HStack {
-                VStack {
-                    HStack {
-                        Button("Start Timed Bottles Animation") {
-    //                        withAnimation(.linear(duration: 1)) {
-    //                            for i in 0...Int(slider) {
-    //                                number = i
-    //                            }
-    //                        }
-                            var index = 1
-                            Timer.scheduledTimer(withTimeInterval: timeInterval, repeats: true) { timer in
-                                number = index
-    //                            withAnimation(.linear(duration: 1)) {
-                                    index += 1
-    //                            }
-                                if index >= Int(slider) {
-                                    timer.invalidate()
-                                }
-                            }
-                        }
-                        Text("\(floor(slider), specifier: "%.1f")")
-                            .padding()
-                    }
-                    Slider(value: $slider, in: -0...35000)
-                        .frame(width: 400)
-                    HStack {
-                            Text("Number of displayed bottles: \(displayedBottles)")
-                    }
-                    AddVehicleFormView(fillup: fillup)
-                    
-                }
-                .frame(width: 450, height: 600, alignment: .topLeading)
-                .border(.green)
-                
-                VehicleView(fillup: fillup, number: $number)
-                    .border(.blue)
+            Spacer()
+            VStack {
+//                VStack {
+//                    Text("Add your vehicle:")
+//                        .font(.title)
+//                    AddVehicleFormView(fillup: fillup)
+//                    Text("Number of displayed bottles: \(displayedBottles)")
+                    VehicleView(fillup: fillup, 
+                                number: $number,
+                                selectedVehicle: $selectedVehicle,
+                                animatedCost: $animatedCost,
+                                animatedBottles: $animatedBottles,
+                                animatedGallons: $animatedGallons,
+                                showAddVehicle: $showAddVehicle)
+//                        .border(.yellow)
+//                        .padding(20)
+                    .frame(width: 275)
+                    .border(.yellow)
+//                }
+//                .frame(width: 450, alignment: .topLeading)
+//                .border(.green)
+//                VStack {
+//                    if let currentVehicle = selectedVehicle {
+//                        Text("Your \(currentVehicle.name) has used \(animatedGallons) gallons of gasoline.")
+//                            .font(.title2)
+//                        Text("That's equal to  \(animatedBottles) 5-gallon water bottles")
+//                            .font(.title2)
+//                        Text("At $\(currentVehicle.averagePricePerGallon, specifier: "%.2f")/gal, that's $\(animatedCost, specifier: "%.2f")!")
+//                            .font(.title2)
+//                    }
+//                }
+                .padding(10)
+            }
+            .sheet(isPresented: $showAddVehicle) {
+                AddVehicleFormView(fillup: fillup)
             }
             
             
-            
+        
             
             Spacer()
             VStack {
@@ -292,7 +309,68 @@ struct ContentView: View {
                                     }
                 Spacer()
             }
+            .padding(20)
+            .frame(minWidth: 800)
+            .background(.black)
+            .opacity(0.9)
+            Spacer()
+            VStack {
+                Spacer()
+                // DOLLARS
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                        .foregroundColor(.white)
+                        .opacity(0.3)
+                    Text("$\(animatedCost, specifier: "%.2f")")
+                        .foregroundColor(.black)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+//                            Spacer()
+//                            Text("\(animatedBottles)")
+//                                .font(.largeTitle)
+//                                .fontWeight(.bold)
+//                            Spacer()
+                    
+                }
+                .frame(width: 275, height: 100)
+                
+                // BOTTLES
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                        .foregroundColor(.white)
+                        .opacity(0.3)
+                        
+                    HStack {
+                        Image("bottles1-min")
+                            .resizable()
+                            .frame(width: 40, height: 70)
+                            .padding()
+                        Spacer()
+                        Text("\(animatedBottles)")
+                            .foregroundColor(.black)
+                            .font(.largeTitle)
+                            .fontWeight(.bold)
+                        Spacer()
+                    }
+                }
+                .frame(width: 275, height: 100)
+                
+                // GALLONS
+                ZStack {
+                    RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                        .foregroundColor(.white)
+                        .opacity(0.3)
+                    Text("\(animatedGallons) gal")
+                        .foregroundColor(.black)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                }
+                .frame(width: 275, height: 100)
+                Spacer()
+            }
+            .padding(20)
             Spacer()
         }
+        .background(RadialGradient(gradient: Gradient(colors: [.green, .blue, .black]), center: .center, startRadius: 2, endRadius: 1200))
     }
 }
