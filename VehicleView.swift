@@ -17,6 +17,9 @@ struct VehicleView: View {
     @Binding var animatedCost: Double
     @Binding var animatedBottles: Int
     @Binding var animatedGallons: Int
+    @Binding var animatedBathTubs: Int
+    @Binding var animatedHotTubs: Int
+    @Binding var animatedTrucks: Double
     
     @Binding var showAddVehicle: Bool
     
@@ -43,7 +46,7 @@ struct VehicleView: View {
                                        style: .continuous)
 //                .fill(.blue)
                 .foregroundColor(.white)
-                .opacity(0.3)
+                .opacity(0.4)
                 .frame(width: 250, height: 200, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
                 .overlay {
                     VStack {
@@ -66,6 +69,9 @@ struct VehicleView: View {
                                 animatedCost = Double(index) * vehicle.averagePricePerGallon * 5
                                 animatedGallons = Int(Double(index) * 5.0)
                                 animatedBottles = index
+                                animatedBathTubs = Int(index / 9)
+                                animatedHotTubs = Int(index / 70)
+                                animatedTrucks = round((Double(index) / 900.0) * 10)/10.0
                                 index += 1
                                 
                                 if index >= Int(total) {
@@ -73,19 +79,20 @@ struct VehicleView: View {
                                     animatedCost = floor(vehicle.totalGallons) * vehicle.averagePricePerGallon
                                     animatedGallons = Int(vehicle.totalGallons)
                                     animatedBottles = Int(vehicle.totalBottles)
+                                    animatedHotTubs = Int(vehicle.totalGallons / 45)
+                                    animatedHotTubs = Int(vehicle.totalGallons / 350)
+                                    animatedTrucks = round((vehicle.totalGallons / 4500) * 10) / 10.0
                                 }
                             }
                         }
-                        .buttonStyle(.bordered)
+                        .buttonStyle(.borderedProminent)
+                        .buttonBorderShape(.capsule)
+                        .tint(.blue)
                         
-                        .tint(.green)
                     }
                     .foregroundColor(.black)
                 }
                 
-            }
-            Button("Add Your Vehicle") {
-                showAddVehicle.toggle()
             }
         }
     }

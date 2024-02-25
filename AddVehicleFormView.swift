@@ -69,7 +69,7 @@ struct AddVehicleFormView: View {
                         showAlert = true
                     }
                 }
-                .alert("Please enter a name and ensure that values are not zero.", isPresented: $showAlert) {
+                .alert("Please enter a name and make sure that values are not zero.", isPresented: $showAlert) {
                     Button("OK", role: .cancel) { }
                 }
             }

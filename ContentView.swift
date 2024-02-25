@@ -7,12 +7,20 @@ struct ContentView: View {
     @State var tankExpanded = true
     
     @State var showAddVehicle = false
+    @State var showIntroduction = true
+    @State var introductionOpacity = 1.0
+    
     var theMaxWidth = 1.0
     
     @State var selectedVehicle: Vehicle?
     @Binding var animatedCost: Double
     @Binding var animatedBottles: Int
     @Binding var animatedGallons: Int
+    @Binding var animatedBathTubs: Int
+    @Binding var animatedHotTubs: Int
+    @Binding var animatedTrucks: Double
+    
+    
     
 //    var scaledImage: String {
 //        switch number {
@@ -204,173 +212,333 @@ struct ContentView: View {
     }
     
     var body: some View {
-        
-        HStack(alignment: .top) {
-            Spacer()
-            VStack {
-//                VStack {
-//                    Text("Add your vehicle:")
-//                        .font(.title)
-//                    AddVehicleFormView(fillup: fillup)
-//                    Text("Number of displayed bottles: \(displayedBottles)")
-                    VehicleView(fillup: fillup, 
-                                number: $number,
-                                selectedVehicle: $selectedVehicle,
-                                animatedCost: $animatedCost,
-                                animatedBottles: $animatedBottles,
-                                animatedGallons: $animatedGallons,
-                                showAddVehicle: $showAddVehicle)
-//                        .border(.yellow)
-//                        .padding(20)
-                    .frame(width: 275)
-                    .border(.yellow)
-//                }
-//                .frame(width: 450, alignment: .topLeading)
-//                .border(.green)
-//                VStack {
-//                    if let currentVehicle = selectedVehicle {
-//                        Text("Your \(currentVehicle.name) has used \(animatedGallons) gallons of gasoline.")
-//                            .font(.title2)
-//                        Text("That's equal to  \(animatedBottles) 5-gallon water bottles")
-//                            .font(.title2)
-//                        Text("At $\(currentVehicle.averagePricePerGallon, specifier: "%.2f")/gal, that's $\(animatedCost, specifier: "%.2f")!")
-//                            .font(.title2)
-//                    }
-//                }
-                .padding(10)
-            }
-            .sheet(isPresented: $showAddVehicle) {
-                AddVehicleFormView(fillup: fillup)
-            }
-            
-            
-        
-            
-            Spacer()
-            VStack {
+        ZStack {
+            HStack {
                 Spacer()
-                // TOP
-                UnevenRoundedRectangle(topLeadingRadius: 20,
-                                       bottomLeadingRadius: 1,
-                                       bottomTrailingRadius: 1,
-                                       topTrailingRadius: 20,
-                                       style: .continuous)
-                                    .frame(width: tankWidth, height: 40)
-                                    .foregroundColor(.gray)
-                                    .overlay {
-                                        HStack {
-                                            Spacer()
-                                            Image("tank-groove-top40")
-                                            Spacer()
-                                            Image("tank-groove-top40")
-                                            Spacer()
-                                            Image("tank-groove-top40")
-                                            Spacer()
-                                            Image("tank-groove-top40")
-                                            Spacer()
-                                            Image("tank-groove-top40")
-                                            Spacer()
-                                        }
-                                    }
-                
-                // MIDDLE
-                ZStack {
-                    Rectangle()
-                        .frame(width: tankWidth, height: tankHeight)
-                        .foregroundColor(.gray)
-                        Image(scaledImageBorder)
-                            .resizable(resizingMode: .tile)
-                            .frame(width: tankWidth, height: tankHeight)
-                            
+                VStack {
+    //                VStack {
+    //                    Text("Add your vehicle:")
+    //                        .font(.title)
+    //                    AddVehicleFormView(fillup: fillup)
+    //                    Text("Number of displayed bottles: \(displayedBottles)")
+                        VehicleView(fillup: fillup,
+                                    number: $number,
+                                    selectedVehicle: $selectedVehicle,
+                                    animatedCost: $animatedCost,
+                                    animatedBottles: $animatedBottles,
+                                    animatedGallons: $animatedGallons,
+                                    animatedBathTubs: $animatedBathTubs,
+                                    animatedHotTubs: $animatedHotTubs,
+                                    animatedTrucks: $animatedTrucks,
+                                    showAddVehicle: $showAddVehicle)
+    //                        .border(.yellow)
+    //                        .padding(20)
+                        .frame(width: 275)
+    //                    .border(.yellow)
+    //                }
+    //                .frame(width: 450, alignment: .topLeading)
+    //                .border(.green)
+    //                VStack {
+    //                    if let currentVehicle = selectedVehicle {
+    //                        Text("Your \(currentVehicle.name) has used \(animatedGallons) gallons of gasoline.")
+    //                            .font(.title2)
+    //                        Text("That's equal to  \(animatedBottles) 5-gallon water bottles")
+    //                            .font(.title2)
+    //                        Text("At $\(currentVehicle.averagePricePerGallon, specifier: "%.2f")/gal, that's $\(animatedCost, specifier: "%.2f")!")
+    //                            .font(.title2)
+    //                    }
+    //                }
+                    .padding(10)
+                }
+                .sheet(isPresented: $showAddVehicle) {
+                    AddVehicleFormView(fillup: fillup)
                 }
                 
-                // BOTTOM
-                UnevenRoundedRectangle(topLeadingRadius: 1,
-                                       bottomLeadingRadius: 20,
-                                       bottomTrailingRadius: 20,
-                                       topTrailingRadius: 1,
-                                       style: .continuous)
-                                    .frame(width: tankWidth, height: 40)
-                                    .foregroundColor(.gray)
-                                    .overlay {
-                                        HStack {
-                                            Spacer()
-                                            Image("tank-groove-bottom40")
-                                            Spacer()
-                                            Image("tank-groove-bottom40")
-                                            Spacer()
-                                            Image("tank-groove-bottom40")
-                                            Spacer()
-                                            Image("tank-groove-bottom40")
-                                            Spacer()
-                                            Image("tank-groove-bottom40")
-                                            Spacer()
+                
+            
+                
+                Spacer()
+                VStack {
+                    Spacer()
+                    // TOP
+                    UnevenRoundedRectangle(topLeadingRadius: 20,
+                                           bottomLeadingRadius: 1,
+                                           bottomTrailingRadius: 1,
+                                           topTrailingRadius: 20,
+                                           style: .continuous)
+                                        .frame(width: tankWidth, height: 40)
+                                        .foregroundColor(.gray)
+                                        .overlay {
+                                            HStack {
+                                                Spacer()
+                                                Image("tank-groove-top40")
+                                                Spacer()
+                                                Image("tank-groove-top40")
+                                                Spacer()
+                                                Image("tank-groove-top40")
+                                                Spacer()
+                                                Image("tank-groove-top40")
+                                                Spacer()
+                                                Image("tank-groove-top40")
+                                                Spacer()
+                                            }
                                         }
-                                    }
+                    
+                    // MIDDLE
+                    ZStack {
+                        Rectangle()
+                            .frame(width: tankWidth, height: tankHeight)
+                            .foregroundColor(.gray)
+                            Image(scaledImageBorder)
+                                .resizable(resizingMode: .tile)
+                                .frame(width: tankWidth, height: tankHeight)
+                                
+                    }
+                    
+                    // BOTTOM
+                    UnevenRoundedRectangle(topLeadingRadius: 1,
+                                           bottomLeadingRadius: 20,
+                                           bottomTrailingRadius: 20,
+                                           topTrailingRadius: 1,
+                                           style: .continuous)
+                                        .frame(width: tankWidth, height: 40)
+                                        .foregroundColor(.gray)
+                                        .overlay {
+                                            HStack {
+                                                Spacer()
+                                                Image("tank-groove-bottom40")
+                                                Spacer()
+                                                Image("tank-groove-bottom40")
+                                                Spacer()
+                                                Image("tank-groove-bottom40")
+                                                Spacer()
+                                                Image("tank-groove-bottom40")
+                                                Spacer()
+                                                Image("tank-groove-bottom40")
+                                                Spacer()
+                                            }
+                                        }
+                    Spacer()
+                }
+                .padding(20)
+                .frame(minWidth: 800)
+                .background(.black)
+                .opacity(0.9)
                 Spacer()
-            }
-            .padding(20)
-            .frame(minWidth: 800)
-            .background(.black)
-            .opacity(0.9)
-            Spacer()
-            VStack {
-                Spacer()
-                // DOLLARS
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20.0, style: .continuous)
-                        .foregroundColor(.white)
-                        .opacity(0.3)
-                    Text("$\(animatedCost, specifier: "%.2f")")
+                VStack {
+                    Spacer()
+                    
+                    // DOLLARS
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                        VStack {
+                            Text("$\(animatedCost, specifier: "%.2f")")
+                                .font(.largeTitle)
+                                .fontWeight(.bold)
+                            Text("Lifetime Fuel Cost")
+                                .font(.headline)
+                        }
                         .foregroundColor(.black)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
+                    
+    //                            Spacer()
+    //                            Text("\(animatedBottles)")
+    //                                .font(.largeTitle)
+    //                                .fontWeight(.bold)
+    //                            Spacer()
+                        
+                    }
+                    .frame(width: 300, height: 100)
+                    
+                    // GALLONS WITH IMAGE
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                            
+                            HStack {
+                                Image("milk")
+                                    .resizable()
+                                    .frame(width: 55, height: 70)
+    //                                .padding(.horizontal, 25)
+                                    .padding()
+                                Spacer()
+                                VStack {
+                                    Text("\(animatedGallons)")
+                                        .font(.largeTitle)
+                                        .fontWeight(.bold)
+                                    Text("Gallons")
+                                        .font(.headline)
+                                }
+                                .foregroundColor(.black)
+                                Spacer()
+                            }
+                    }
+                    .frame(width: 300, height: 100)
+                    
+                    // BOTTLES
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                            
+                            HStack {
+                                Image("bottles1-min")
+                                    .resizable()
+                                    .frame(width: 40, height: 70)
+    //                                .padding(.horizontal, 25)
+                                    .padding()
+                                Spacer()
+                                VStack {
+                                    Text("\(animatedBottles)")
+                                        .font(.largeTitle)
+                                        .fontWeight(.bold)
+                                    Text("5 Gallon Bottles")
+                                        .font(.headline)
+                                }
+                                .foregroundColor(.black)
+                                Spacer()
+                            }
+                    }
+                    .frame(width: 300, height: 100)
+                    
+                    // BATH TUBS
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                            
+                        HStack {
+                            Image("bathtub")
+                                .resizable()
+                                .frame(width: 70, height: 47)
+                                .padding()
+                            Spacer()
+                            VStack {
+                                Text("\(animatedBathTubs)")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                Text("45 Gallon Bath Tubs")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.black)
+                            Spacer()
+                        }
+                    }
+                    .frame(width: 300, height: 100)
+                    
+                    // HOT TUBS
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                            
+                        HStack {
+                            Image("hottub")
+                                .resizable()
+                                .frame(width: 70, height: 52)
+                                .padding()
+                            Spacer()
+                            VStack {
+                                Text("\(animatedHotTubs)")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                Text("350 Gallon Hot Tubs")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.black)
+                            Spacer()
+                        }
+                    }
+                    .frame(width: 300, height: 100)
+                    
+//                    // TANKER TRUCKS
+//                    ZStack {
+//                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+//                            .foregroundColor(.white)
+//                            .opacity(0.4)
+//                            
+//                        HStack {
+//                            Image("truck")
+//                                .resizable()
+//                                .frame(width: 70, height: 37)
+//                                .padding()
 //                            Spacer()
-//                            Text("\(animatedBottles)")
+//                            VStack {
+//                                Text("\(animatedTrucks, specifier: "%.1f")")
+//                                    .font(.largeTitle)
+//                                    .fontWeight(.bold)
+//                                Text("4500 Gallon Tanker Trucks")
+//                                    .font(.subheadline)
+//                            }
+//                            .foregroundColor(.black)
+//                            Spacer()
+//                        }
+//                    }
+//                    .frame(width: 300, height: 100)
+                    
+                    // TANKER TRUCKS REFORMATTED
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                            
+                        VStack {
+                            HStack {
+                                Image("truck")
+                                    .resizable()
+                                    .frame(width: 70, height: 37)
+                                    .padding()
+                                Spacer()
+                                Text("\(animatedTrucks, specifier: "%.1f")")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                Spacer()
+                            }
+                                Text("4500 Gallon Tanker Trucks")
+                                    .font(.headline)
+                                    .padding(.bottom, 8)
+                            }
+                            .foregroundColor(.black)
+                            Spacer()
+                        }
+                    
+                    .frame(width: 300, height: 100)
+                    
+                    
+//                    // GALLONS
+//                    ZStack {
+//                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+//                            .foregroundColor(.white)
+//                            .opacity(0.4)
+//                        HStack {
+//                            Text("\(animatedGallons)")
 //                                .font(.largeTitle)
 //                                .fontWeight(.bold)
-//                            Spacer()
-                    
+//                            Text("Gallons")
+//                                .font(.headline)
+//                        }
+//                        .foregroundColor(.black)
+//                    }
+//                    .frame(width: 300, height: 100)
+                    Spacer()
                 }
-                .frame(width: 275, height: 100)
-                
-                // BOTTLES
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20.0, style: .continuous)
-                        .foregroundColor(.white)
-                        .opacity(0.3)
-                        
-                    HStack {
-                        Image("bottles1-min")
-                            .resizable()
-                            .frame(width: 40, height: 70)
-                            .padding()
-                        Spacer()
-                        Text("\(animatedBottles)")
-                            .foregroundColor(.black)
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        Spacer()
-                    }
-                }
-                .frame(width: 275, height: 100)
-                
-                // GALLONS
-                ZStack {
-                    RoundedRectangle(cornerRadius: 20.0, style: .continuous)
-                        .foregroundColor(.white)
-                        .opacity(0.3)
-                    Text("\(animatedGallons) gal")
-                        .foregroundColor(.black)
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                }
-                .frame(width: 275, height: 100)
+                .padding(20)
                 Spacer()
             }
-            .padding(20)
-            Spacer()
+            .background(RadialGradient(gradient: Gradient(colors: [.green, .blue, .black]), center: .center, startRadius: 2, endRadius: 1200))
+            .onChange(of: showIntroduction) { _ in
+                withAnimation(.easeInOut(duration: 1)) {
+                    introductionOpacity = 0.0
+                }
+            }
+
+                    IntroductionView(showIntroduction: $showIntroduction)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                        .opacity(introductionOpacity)
+
+            
         }
-        .background(RadialGradient(gradient: Gradient(colors: [.green, .blue, .black]), center: .center, startRadius: 2, endRadius: 1200))
     }
 }
