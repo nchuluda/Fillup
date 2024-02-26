@@ -19,9 +19,14 @@ struct VehicleView: View {
     @Binding var animatedGallons: Int
     @Binding var animatedBathTubs: Int
     @Binding var animatedHotTubs: Int
+    @Binding var animatedPools: Double
     @Binding var animatedTrucks: Double
     
     @Binding var showAddVehicle: Bool
+    @Binding var showTankText: Bool
+    
+    let steelGray = Color(white: 0.4745)
+    let skyBlue = Color(red: 0.4627, green: 0.8392, blue: 1.0)
     
     var timeInterval: Double {
         if total < 1000 {
@@ -36,6 +41,7 @@ struct VehicleView: View {
     }
     
     var body: some View {
+        Spacer()
         ScrollView {
             ForEach(fillup.vehicles) { vehicle in
                 UnevenRoundedRectangle(cornerRadii: .init(
@@ -59,8 +65,10 @@ struct VehicleView: View {
                         Text("MPG: \(Int(vehicle.mpg))")
                         Text("Price per gallon: $\(vehicle.averagePricePerGallon, specifier: "%.2f")")
                             .padding(.bottom, 5)
-                        Button("Fillup Tank") {
-                            
+                        Button("⛽️ Fillup Tank") {
+//                        Button {
+
+                            showTankText = false
                             selectedVehicle = vehicle
                             var index = 1
                             total = vehicle.totalBottles
@@ -71,6 +79,7 @@ struct VehicleView: View {
                                 animatedBottles = index
                                 animatedBathTubs = Int(index / 9)
                                 animatedHotTubs = Int(index / 70)
+                                animatedPools = round((Double(index) / 600.0) * 10)/10.0
                                 animatedTrucks = round((Double(index) / 900.0) * 10)/10.0
                                 index += 1
                                 
@@ -81,19 +90,49 @@ struct VehicleView: View {
                                     animatedBottles = Int(vehicle.totalBottles)
                                     animatedHotTubs = Int(vehicle.totalGallons / 45)
                                     animatedHotTubs = Int(vehicle.totalGallons / 350)
+                                    animatedPools = round((vehicle.totalGallons / 3000) * 10) / 10.0
                                     animatedTrucks = round((vehicle.totalGallons / 4500) * 10) / 10.0
                                 }
                             }
+//                        } label: {
+//                            HStack {
+//                                Image("gas")
+//                                    .resizable()
+//                                    .frame(width: 20, height: 23)
+//                                Text("Fillup Tank")
+//                            }.padding(5)
                         }
+                        .fontWeight(.bold)
                         .buttonStyle(.borderedProminent)
                         .buttonBorderShape(.capsule)
-                        .tint(.blue)
-                        
+                        .tint(.white.opacity(0.4))
                     }
                     .foregroundColor(.black)
                 }
                 
             }
+
         }
+        .frame(height: 860)
+        //
+        Button("􀅼 Add Your Vehicle") {
+            showAddVehicle.toggle()
+        }
+        
+        .font(.title2)
+        .fontWeight(.bold)
+//        .frame(width: 300, height: 100)
+        .foregroundColor(.black)
+        .buttonStyle(.borderedProminent)
+        .buttonBorderShape(.capsule)
+        .tint(.white.opacity(0.7))
+        .opacity(0.8)
+        Spacer()
     }
 }
+
+
+
+
+
+

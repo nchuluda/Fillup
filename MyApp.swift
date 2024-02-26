@@ -8,6 +8,7 @@ struct MyApp: App {
     @State var animatedGallons: Int = 0
     @State var animatedBathTubs: Int = 0
     @State var animatedHotTubs: Int = 0
+    @State var animatedPools: Double = 0.0
     @State var animatedTrucks: Double = 0.0
     
     var body: some Scene {
@@ -18,6 +19,7 @@ struct MyApp: App {
                         animatedGallons: $animatedGallons,
                         animatedBathTubs: $animatedBathTubs,
                         animatedHotTubs: $animatedHotTubs,
+                        animatedPools: $animatedPools,
                         animatedTrucks: $animatedTrucks)
         }
     }

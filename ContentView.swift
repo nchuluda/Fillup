@@ -8,19 +8,67 @@ struct ContentView: View {
     
     @State var showAddVehicle = false
     @State var showIntroduction = true
+    @State var showTankText = true
     @State var introductionOpacity = 1.0
     
     var theMaxWidth = 1.0
     
     @State var selectedVehicle: Vehicle?
+    
+    @State var selectedItem: Item = Item(image: "bottle1-min", aspectRatio: 432.0/800.0)
+    
+    
     @Binding var animatedCost: Double
     @Binding var animatedBottles: Int
     @Binding var animatedGallons: Int
     @Binding var animatedBathTubs: Int
     @Binding var animatedHotTubs: Int
+    @Binding var animatedPools: Double
     @Binding var animatedTrucks: Double
     
+
     
+    
+    
+    // EXPERIMENTAL ZONE FOR ADDITIONAL OBJECTS IN TANK
+    @State var grid: (x: Int, y: Int, calculatedWidth: Int, calculatedHeight: Int) = (x: 0, y: 0, calculatedWidth: 0, calculatedHeight: 0)
+    
+    @State var xCount = 2
+    @State var yCount = 2
+    
+    @State var calcW = 50.0
+    @State var calcH = 40.0
+    
+    @State var tankW = 500
+    @State var tankH = 100
+    
+    @State var remainder = 0
+    
+    @State var image = "hottub"
+    
+    let aspectRatio = 0.6
+
+    let bottle = Item(image: "bottle1-min", aspectRatio: 432.0/800.0)
+    let bathtub = Item(image: "bathtub", aspectRatio: 610.0/409.0)
+    let hotTub = Item(image: "hottub", aspectRatio: 401.0/503.0)
+    let pool = Item(image: "pool", aspectRatio: 617.0/405.0)
+    let tanker = Item(image: "tanker", aspectRatio: 684.0/365.0)
+    
+    func getBestFit(_ number: Int, _ item: Item) -> (x: Int, y: Int, calculatedWidth: Int, calculatedHeight: Int) {
+        for i in 1...number {
+            let x = i
+            let y = Int(ceil(Double(number) / Double(x)))
+            if Double(x)/Double(y) > aspectRatio {
+                let calculatedWidth = Int(floor(Double(tankW)/Double(x)))
+                let calculatedHeight = Int(floor(item.aspectRatio * Double(calculatedWidth)))
+                
+//                print("x: \(x), y: \(y), calcX: \(calculatedWidth), calcY: \(calculatedHeight)")
+                return (x: x, y: y, calculatedWidth: calculatedWidth, calculatedHeight: calculatedHeight)
+            }
+        }
+        return (x: 1, y: 1, calculatedWidth: 1, calculatedHeight: 1)
+    }
+    // END EXPERIMENTAL ZONE
     
 //    var scaledImage: String {
 //        switch number {
@@ -61,9 +109,9 @@ struct ContentView: View {
             return "bottles12x21"
         case 1601...2400:
             return "bottles10x18"
-        case 2401...7500:
+        case 2401...7200:
             return "bottles7x12"
-        case 7501...12500:
+        case 7201...12500:
             return "bottles5x7"
         case 12501...25000:
             return "bottles3x5"
@@ -86,9 +134,9 @@ struct ContentView: View {
             return 12.0
         case 1601...2400:
             return 10.0
-        case 2401...7500:
+        case 2401...7200:
             return 7.0
-        case 7501...12500:
+        case 7201...12500:
             return 5.0
         case 12501...25000:
             return 3.0
@@ -111,9 +159,9 @@ struct ContentView: View {
             return 21.0
         case 1601...2400:
             return 18.0
-        case 2401...7500:
+        case 2401...7200:
             return 12.0
-        case 7501...12500:
+        case 7201...12500:
             return 7.0
         case 12501...25000:
             return 5.0
@@ -229,8 +277,10 @@ struct ContentView: View {
                                     animatedGallons: $animatedGallons,
                                     animatedBathTubs: $animatedBathTubs,
                                     animatedHotTubs: $animatedHotTubs,
+                                    animatedPools: $animatedPools,
                                     animatedTrucks: $animatedTrucks,
-                                    showAddVehicle: $showAddVehicle)
+                                    showAddVehicle: $showAddVehicle, 
+                                    showTankText: $showTankText)
     //                        .border(.yellow)
     //                        .padding(20)
                         .frame(width: 275)
@@ -260,6 +310,13 @@ struct ContentView: View {
                 Spacer()
                 VStack {
                     Spacer()
+                    if showTankText {
+                        Text("How Big Is Your Tank?")
+                            .font(.title)
+                            .fontWeight(.bold)
+                            .foregroundColor(.white)
+                            .padding(20)
+                    }
                     // TOP
                     UnevenRoundedRectangle(topLeadingRadius: 20,
                                            bottomLeadingRadius: 1,
@@ -328,19 +385,31 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     
+                    
                     // DOLLARS
                     ZStack {
                         RoundedRectangle(cornerRadius: 20.0, style: .continuous)
                             .foregroundColor(.white)
                             .opacity(0.4)
-                        VStack {
-                            Text("$\(animatedCost, specifier: "%.2f")")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
-                            Text("Lifetime Fuel Cost")
-                                .font(.headline)
+                        
+                        HStack {
+                            Image("gas")
+                                .resizable()
+                                .frame(width: 61, height: 70)
+                                .padding()
+                            Spacer()
+                            VStack {
+//                                Text("$\(animatedCost, specifier: "%.2f")")
+                                Text("$\(Int(animatedCost))")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                Text("Lifetime Fuel Cost")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.black)
+                            Spacer()
                         }
-                        .foregroundColor(.black)
+                        
                     
     //                            Spacer()
     //                            Text("\(animatedBottles)")
@@ -453,6 +522,31 @@ struct ContentView: View {
                     }
                     .frame(width: 300, height: 100)
                     
+                    // HOT TUBS
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
+                            .foregroundColor(.white)
+                            .opacity(0.4)
+                            
+                        HStack {
+                            Image("pool")
+                                .resizable()
+                                .frame(width: 70, height: 46)
+                                .padding()
+                            Spacer()
+                            VStack {
+                                Text("\(animatedPools, specifier: "%.1f")")
+                                    .font(.largeTitle)
+                                    .fontWeight(.bold)
+                                Text("3000 Gallon Pools")
+                                    .font(.headline)
+                            }
+                            .foregroundColor(.black)
+                            Spacer()
+                        }
+                    }
+                    .frame(width: 300, height: 100)
+                    
 //                    // TANKER TRUCKS
 //                    ZStack {
 //                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
@@ -505,23 +599,6 @@ struct ContentView: View {
                         }
                     
                     .frame(width: 300, height: 100)
-                    
-                    
-//                    // GALLONS
-//                    ZStack {
-//                        RoundedRectangle(cornerRadius: 20.0, style: .continuous)
-//                            .foregroundColor(.white)
-//                            .opacity(0.4)
-//                        HStack {
-//                            Text("\(animatedGallons)")
-//                                .font(.largeTitle)
-//                                .fontWeight(.bold)
-//                            Text("Gallons")
-//                                .font(.headline)
-//                        }
-//                        .foregroundColor(.black)
-//                    }
-//                    .frame(width: 300, height: 100)
                     Spacer()
                 }
                 .padding(20)
@@ -534,11 +611,9 @@ struct ContentView: View {
                 }
             }
 
-                    IntroductionView(showIntroduction: $showIntroduction)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-                        .opacity(introductionOpacity)
-
-            
+            IntroductionView(showIntroduction: $showIntroduction)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+                .opacity(introductionOpacity)
         }
     }
 }
